@@ -1,7 +1,7 @@
 const fs = require('fs')
 const options = fs.readdirSync(__dirname, { withFileTypes: true })
 
-function listOptions() {
+function listOptions () {
   console.log('Allowed options:')
   options.forEach((option, index) => {
     if (options[index].isFile()) return
@@ -9,8 +9,8 @@ function listOptions() {
   })
 }
 
-function getOptions() {
-  return options.map(option => option.name)
+function getOptions () {
+  return options.map((option) => option.name)
 }
 
 module.exports = {

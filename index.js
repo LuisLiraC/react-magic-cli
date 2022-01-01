@@ -1,4 +1,5 @@
 const chalk = require('chalk')
+const path = require('path')
 const { listOptions, getOptions } = require('./commands/options')
 
 const [, , ...userArguments] = process.argv
@@ -10,14 +11,14 @@ const [option, name] = userArguments
 const options = getOptions()
 
 if (options.includes(option)) {
-  const create = require(`${__dirname}/commands/${option}/index.js`)
+  const create = require(path.join(__dirname, `/commands/${option}/index.js`))
   create(name)
 } else {
   listOptions()
   exitTerminal('Option not found')
 }
 
-function exitTerminal(message) {
+function exitTerminal (message) {
   console.error(chalk.red(message))
   process.exit()
 }

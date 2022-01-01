@@ -18,10 +18,10 @@ const config = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx']
   },
   devServer: {
-    'static': {
+    static: {
       directory: './dist'
     }
   },

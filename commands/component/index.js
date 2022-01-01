@@ -1,13 +1,14 @@
 const CURRENT_DIR = process.cwd()
 const fs = require('fs')
+const path = require('path')
 
-function create(componentName) {
+function create (componentName) {
   const language = 'javascript'
-  const templatePath = `${__dirname}/../../templates/${language}/component/index.template`
+  const templatePath = path.join(__dirname, `/../../templates/${language}/component/index.template`)
 
   let contents = fs.readFileSync(templatePath, 'utf-8')
 
-  contents = contents.replace(/{{COMPONENT_NAME}}/g, componentName)
+  contents = contents.replace(/COMPONENT_NAME/g, componentName)
   const newFileName = `${componentName}.jsx`
 
   const writePath = `${CURRENT_DIR}/src/components/${newFileName}`
