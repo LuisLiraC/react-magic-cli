@@ -8,8 +8,28 @@
     "lint": "eslint .",
     "prepare": "husky install"
   },
-  "keywords": [],
-  "author": "LuisLiraC <luisliradev@gmail.com> (https://luislira.dev/)",
+  "keywords": [
+    "react",
+    "javascript",
+    "typescript",
+    "project",
+    "generator"
+  ],
+  "bin": {
+    "rg": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LuisLiraC/react-cli"
+  },
+  "bugs": {
+    "url": "https://github.com/LuisLiraC/react-cli/issues"
+  },
+  "author": {
+    "name": "Luis Lira",
+    "email": "luisliradev@gmail.com",
+    "url": "https://luislira.dev/"
+  },
   "license": "MIT",
   "dependencies": {
     "chalk": "4.1.2",

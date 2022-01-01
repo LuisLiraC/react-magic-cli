@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const chalk = require('chalk')
 const path = require('path')
 const { listOptions, getOptions } = require('./commands/options')
