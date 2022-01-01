@@ -12,7 +12,7 @@ function create (componentName) {
   const newFileName = `${componentName}.jsx`
   const writePath = `${CURRENT_DIR}/src/components/${newFileName}`
 
-  fs.writeFileSync(writePath, contents, 'utf-8' )
+  fs.writeFileSync(writePath, contents, 'utf-8')
 }
 
 module.exports = create
