@@ -1,8 +1,8 @@
 const fs = require('fs')
+const path = require('path')
 const { exec } = require('child_process')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
-const path = require('path')
 
 const CURRENT_DIR = process.cwd()
 
@@ -50,15 +50,12 @@ function createDirectoryContents (templatePath, projectName) {
       }
 
       const newFileName = file.replace('.template', '')
-
       const writePath = `${CURRENT_DIR}/${projectName}/${newFileName}`
+
       fs.writeFileSync(writePath, contents, 'utf8')
     } else if (stats.isDirectory()) {
       fs.mkdirSync(`${CURRENT_DIR}/${projectName}/${file}`)
-      createDirectoryContents(
-        `${templatePath}/${file}`,
-        `${projectName}/${file}`
-      )
+      createDirectoryContents(`${templatePath}/${file}`, `${projectName}/${file}`)
     }
   })
 }
@@ -71,24 +68,15 @@ function installDependencies (projectName) {
   install.stdout.on('data', (data) => {
     if (data.includes('added')) {
       console.log(data)
-      console.log(
-        chalk.cyan(`Run your project\n  cd ${projectName}\n  npm start`)
-      )
+      console.log(chalk.cyan(`Run your project\n  cd ${projectName}\n  npm start`))
       console.log(chalk.cyan('\nHappy coding :)'))
     }
   })
 
   install.stderr.on('data', (data) => {
-    console.log(
-      'An error has ocurred while dependencies install. Try it manually.'
-    )
+    console.log('An error has ocurred while dependencies install. Try it manually.')
     console.log(data)
-
-    console.log(
-      chalk.magenta(
-        `Enter to project folder usin "cd ${projectName}" and then "npm install"`
-      )
-    )
+    console.log(chalk.magenta(`Enter to project folder using "cd ${projectName}" and then "npm install"`))
   })
 }
 
