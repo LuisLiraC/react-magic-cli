@@ -6,6 +6,11 @@ const chalk = require('chalk')
 
 const CURRENT_DIR = process.cwd()
 
+const BUNDLERS = {
+  Webpack: 'Webpack',
+  Snowpack: 'Snowpack'
+}
+
 const GENERAL_QUESTIONS = [
   {
     name: 'language',
@@ -17,12 +22,35 @@ const GENERAL_QUESTIONS = [
     name: 'bundler',
     type: 'list',
     message: 'Select bundler',
-    choices: ['Webpack']
+    choices: [BUNDLERS.Webpack]
+  }
+]
+
+const WEBPACK_QUESTIONS = [
+  {
+    name: 'plugins',
+    type: 'checkbox',
+    message: 'What Webpack plugins will you use?',
+    choices: [
+      'MiniCSSExtracPlugin',
+      'CleanWebpackPlugin',
+      'CopyWebpackPlugin',
+      'WebpackBundleAnalyzer'
+    ]
   }
 ]
 
 function create (projectName) {
-  inquirer.prompt(GENERAL_QUESTIONS).then((answers) => {
+  inquirer.prompt(GENERAL_QUESTIONS).then(async (answers) => {
+    if (answers.bundler === BUNDLERS.Webpack) {
+      const webpackAnswers = await inquirer.prompt(WEBPACK_QUESTIONS)
+      answers = {
+        ...answers,
+        ...webpackAnswers
+      }
+    }
+
+    console.log(answers)
     const language = answers.language.toLowerCase()
     const templatePath = path.join(__dirname, `/../../templates/${language}/project/`)
     const newDir = `${CURRENT_DIR}/${projectName}`
