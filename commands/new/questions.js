@@ -29,6 +29,7 @@ const GENERAL_QUESTIONS = [
       'CSS',
       'SCSS',
       'SASS',
+      'PostCSS',
       'LESS',
       'Stylus'
     ]

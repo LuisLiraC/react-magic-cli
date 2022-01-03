@@ -44,8 +44,7 @@ function createDirectoryContents (templatePath, projectName) {
         contents = contents.replace(/PROJECT_NAME/, projectName)
       }
 
-      const newFileName = file.replace('.template', '')
-      const writePath = `${CURRENT_DIR}/${projectName}/${newFileName}`
+      const writePath = `${CURRENT_DIR}/${projectName}/${file}`
 
       fs.writeFileSync(writePath, contents, 'utf8')
     } else if (stats.isDirectory()) {
@@ -95,7 +94,7 @@ function getDependencies (answers) {
     devDependencies.push(...DEV_DEPENDENCIES.webpack)
     devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.htmlWebpackPlugin)
 
-    if (answers.plugins.includes('MiniCSSExtracPlugin')) {
+    if (answers.plugins.includes('MiniCSSExtractPlugin')) {
       devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.miniCssExtractPlugin)
     }
 
