@@ -80,10 +80,7 @@ function installDependencies (projectName, answers) {
 
 function getDependencies (answers) {
   const dependencies = [...DEPENDENCIES.react]
-  const devDependencies = [
-    ...DEV_DEPENDENCIES.babel,
-    ...DEV_DEPENDENCIES.webpack
-  ]
+  const devDependencies = [...DEV_DEPENDENCIES.babel]
 
   if (answers.language === 'TypeScript') {
     devDependencies.push(...DEV_DEPENDENCIES.typescript)
