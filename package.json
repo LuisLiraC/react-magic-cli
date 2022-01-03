@@ -1,6 +1,6 @@
 {
-  "name": "react-cli",
-  "version": "1.0.0",
+  "name": "react-cli-project",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,15 +15,16 @@
     "project",
     "generator"
   ],
+  "homepage": "https://github.com/LuisLiraC/react-cli-project",
   "bin": {
     "rg": "./index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/LuisLiraC/react-cli"
+    "url": "https://github.com/LuisLiraC/react-cli-project"
   },
   "bugs": {
-    "url": "https://github.com/LuisLiraC/react-cli/issues"
+    "url": "https://github.com/LuisLiraC/react-cli-project/issues"
   },
   "author": {
     "name": "Luis Lira",
