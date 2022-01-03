@@ -3,64 +3,31 @@ const path = require('path')
 const { exec } = require('child_process')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
+const { BUNDLERS, GENERAL_QUESTIONS, WEBPACK_QUESTIONS } = require('./questions')
+const { DEPENDENCIES, DEV_DEPENDENCIES } = require('./dependencies')
 
 const CURRENT_DIR = process.cwd()
 
-const BUNDLERS = {
-  Webpack: 'Webpack',
-  Snowpack: 'Snowpack'
-}
+async function create (projectName) {
+  let generalAnswers = await inquirer.prompt(GENERAL_QUESTIONS)
 
-const GENERAL_QUESTIONS = [
-  {
-    name: 'language',
-    type: 'list',
-    message: 'Select language',
-    choices: ['JavaScript', 'TypeScript']
-  },
-  {
-    name: 'bundler',
-    type: 'list',
-    message: 'Select bundler',
-    choices: [BUNDLERS.Webpack]
-  }
-]
-
-const WEBPACK_QUESTIONS = [
-  {
-    name: 'plugins',
-    type: 'checkbox',
-    message: 'What Webpack plugins will you use?',
-    choices: [
-      'MiniCSSExtracPlugin',
-      'CleanWebpackPlugin',
-      'CopyWebpackPlugin',
-      'WebpackBundleAnalyzer'
-    ]
-  }
-]
-
-function create (projectName) {
-  inquirer.prompt(GENERAL_QUESTIONS).then(async (answers) => {
-    if (answers.bundler === BUNDLERS.Webpack) {
-      const webpackAnswers = await inquirer.prompt(WEBPACK_QUESTIONS)
-      answers = {
-        ...answers,
-        ...webpackAnswers
-      }
+  if (generalAnswers.bundler === BUNDLERS.Webpack) {
+    const webpackAnswers = await inquirer.prompt(WEBPACK_QUESTIONS)
+    generalAnswers = {
+      ...generalAnswers,
+      ...webpackAnswers
     }
+  }
 
-    console.log(answers)
-    const language = answers.language.toLowerCase()
-    const templatePath = path.join(__dirname, `/../../templates/${language}/project/`)
-    const newDir = `${CURRENT_DIR}/${projectName}`
+  const language = generalAnswers.language.toLowerCase()
+  const templatePath = path.join(__dirname, `/../../templates/${language}/project/`)
+  const newDir = `${CURRENT_DIR}/${projectName}`
 
-    fs.mkdirSync(newDir)
-    createDirectoryContents(templatePath, projectName)
+  fs.mkdirSync(newDir)
+  createDirectoryContents(templatePath, projectName)
 
-    console.log(chalk.green('Project created successfully'))
-    installDependencies(projectName)
-  })
+  console.log(chalk.green('Project created successfully'))
+  installDependencies(projectName, generalAnswers)
 }
 
 function createDirectoryContents (templatePath, projectName) {
@@ -88,24 +55,70 @@ function createDirectoryContents (templatePath, projectName) {
   })
 }
 
-function installDependencies (projectName) {
-  console.log(chalk.grey('Installing dependencies'))
+function installDependencies (projectName, answers) {
+  const { dependencies, devDependencies } = getDependencies(answers)
 
-  const install = exec(`cd ${projectName} && npm i`)
+  console.log(chalk.grey('Installing dependencies'))
+  const install = exec(`cd ${projectName} && npm i ${dependencies} && npm i ${devDependencies} -D`)
 
   install.stdout.on('data', (data) => {
     if (data.includes('added')) {
       console.log(data)
-      console.log(chalk.cyan(`Run your project\n  cd ${projectName}\n  npm start`))
-      console.log(chalk.cyan('\nHappy coding :)'))
     }
   })
 
   install.stderr.on('data', (data) => {
     console.log('An error has ocurred while dependencies install. Try it manually.')
     console.log(data)
-    console.log(chalk.magenta(`Enter to project folder using "cd ${projectName}" and then "npm install"`))
   })
+
+  install.on('exit', () => {
+    console.log(chalk.cyan(`Run your project\n  cd ${projectName}\n  npm start`))
+    console.log(chalk.cyan('\nHappy coding :)'))
+  })
+}
+
+function getDependencies (answers) {
+  const dependencies = [...DEPENDENCIES.react]
+  const devDependencies = [
+    ...DEV_DEPENDENCIES.babel,
+    ...DEV_DEPENDENCIES.webpack
+  ]
+
+  if (answers.language === 'TypeScript') {
+    devDependencies.push(...DEV_DEPENDENCIES.typescript)
+    devDependencies.push(...DEV_DEPENDENCIES.types.react)
+  }
+
+  if (answers.routing) {
+    dependencies.push(...DEPENDENCIES.reactRouter)
+  }
+
+  if (answers.bundler === BUNDLERS.Webpack) {
+    devDependencies.push(...DEV_DEPENDENCIES.webpack)
+    devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.htmlWebpackPlugin)
+
+    if (answers.plugins.includes('MiniCSSExtracPlugin')) {
+      devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.miniCssExtractPlugin)
+    }
+
+    if (answers.plugins.includes('CleanWebpackPlugin')) {
+      devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.cleanWebpackPlugin)
+    }
+
+    if (answers.plugins.includes('CopyWebpackPlugin')) {
+      devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.copyWebpackPlugin)
+    }
+
+    if (answers.plugins.includes('WebpackBundleAnalyzer')) {
+      devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.webpackBundleAnalyzer)
+    }
+  }
+
+  return {
+    dependencies: dependencies.join(' '),
+    devDependencies: devDependencies.join(' ')
+  }
 }
 
 module.exports = create
