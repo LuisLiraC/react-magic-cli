@@ -2,6 +2,10 @@ const fs = require('fs')
 const path = require('path')
 const CURRENT_DIR = process.cwd()
 
+/**
+ * @param {string} componentName
+ */
+
 function create (componentName) {
   const files = fs.readdirSync(CURRENT_DIR)
 

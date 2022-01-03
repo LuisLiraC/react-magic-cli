@@ -42,7 +42,7 @@ const WEBPACK_QUESTIONS = [
     type: 'checkbox',
     message: 'What Webpack plugins will you use?',
     choices: [
-      'MiniCSSExtracPlugin',
+      'MiniCSSExtractPlugin',
       'CleanWebpackPlugin',
       'CopyWebpackPlugin',
       'WebpackBundleAnalyzer'

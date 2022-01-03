@@ -1,3 +1,12 @@
+/**
+ * @typedef {Object} Answers
+ * @property {string} language
+ * @property {string} bundler
+ * @property {boolean} routing
+ * @property {string} stylesheet
+ * @property {string[]} plugins
+ */
+
 const fs = require('fs')
 const path = require('path')
 const { exec } = require('child_process')
@@ -8,7 +17,12 @@ const { DEPENDENCIES, DEV_DEPENDENCIES } = require('./dependencies')
 
 const CURRENT_DIR = process.cwd()
 
+/**
+ * @param {string} projectName
+ */
+
 async function create (projectName) {
+  /** @type {Answers} */
   let generalAnswers = await inquirer.prompt(GENERAL_QUESTIONS)
 
   if (generalAnswers.bundler === BUNDLERS.Webpack) {
@@ -29,6 +43,11 @@ async function create (projectName) {
   console.log(chalk.green('Project created successfully'))
   installDependencies(projectName, generalAnswers)
 }
+
+/**
+ * @param {string} templatePath
+ * @param {string} projectName
+ */
 
 function createDirectoryContents (templatePath, projectName) {
   const filesToCreate = fs.readdirSync(templatePath)
@@ -54,6 +73,11 @@ function createDirectoryContents (templatePath, projectName) {
   })
 }
 
+/**
+ * @param {string} projectName
+ * @param {Answers} answers
+ */
+
 function installDependencies (projectName, answers) {
   const { dependencies, devDependencies } = getDependencies(answers)
 
@@ -76,6 +100,10 @@ function installDependencies (projectName, answers) {
     console.log(chalk.cyan('\nHappy coding :)'))
   })
 }
+
+/**
+ * @param {Answers} answers
+ */
 
 function getDependencies (answers) {
   const dependencies = [...DEPENDENCIES.react]
