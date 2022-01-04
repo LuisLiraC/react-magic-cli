@@ -92,7 +92,7 @@ function createExtraFiles (projectName, answers) {
  * @param {string} file
  * @param {string} contents
  * @param {string} projectName
- * @param {Answers} param3
+ * @param {Answers} answers
  */
 
 function replaceContents (file, contents, projectName, { plugins, stylesheet }) {
@@ -101,19 +101,7 @@ function replaceContents (file, contents, projectName, { plugins, stylesheet }) 
   }
 
   if (file.includes('webpack.config.js')) {
-    const hasMiniCssExtractPlugin = plugins.includes('MiniCSSExtractPlugin')
-    const stylesRule = getStylesConfig(stylesheet, hasMiniCssExtractPlugin)
-    contents = contents.replace(/STYLES_RULE/, stylesRule)
-
-    if (hasMiniCssExtractPlugin) {
-      contents = contents
-        .replace(/MINI_CSS_EXTRACT_PLUGIN_IMPORT/, 'const MiniCssExtractPlugin = require(\'mini-css-extract-plugin\')')
-        .replace(/MINI_CSS_EXTRACT_PLUGIN_USE/, 'new MiniCssExtractPlugin(),')
-    } else {
-      contents = contents
-        .replace(/MINI_CSS_EXTRACT_PLUGIN_IMPORT/, '')
-        .replace(/MINI_CSS_EXTRACT_PLUGIN_USE/, '')
-    }
+    contents = replaceWebpackContent(contents, { stylesheet, plugins })
   }
 
   if (file.includes('styles.template')) {
@@ -133,6 +121,71 @@ function replaceContents (file, contents, projectName, { plugins, stylesheet }) 
     contents,
     newFileName
   }
+}
+
+/**
+ * @param {string} contents
+ * @returns {string}
+ */
+function replace (contents) {
+  return contents
+    .replace(this.importPlaceholder, this.import)
+    .replace(this.usePlaceholder, this.use)
+    .replace(this.rulePlaceholder, this.rule)
+}
+
+/**
+ * @param {string} contents
+ * @param {Answers} answers
+ */
+
+function replaceWebpackContent (contents, { stylesheet, plugins }) {
+  const WEBPACK_CONTENT = {
+    MiniCSSExtractPlugin: {
+      importPlaceholder: /MINI_CSS_EXTRACT_PLUGIN_IMPORT/,
+      usePlaceholder: /MINI_CSS_EXTRACT_PLUGIN_USE/,
+      rulePlaceholder: /STYLES_RULE/,
+      import: 'const MiniCssExtractPlugin = require(\'mini-css-extract-plugin\')',
+      use: 'new MiniCssExtractPlugin(),',
+      rule: getStylesConfig(stylesheet, true),
+      replace
+    },
+    WebpackBundleAnalyzer: {
+      importPlaceholder: /WEBPACK_BUNDLE_ANALYZER_IMPORT/,
+      usePlaceholder: /WEBPACK_BUNDLE_ANALYZER_USE/,
+      rulePlaceholder: '',
+      import: 'const BundleAnalyzerPlugin = require(\'webpack-bundle-analyzer\').BundleAnalyzerPlugin',
+      use: 'new BundleAnalyzerPlugin({\n      analyzerMode: \'static\',\n      openAnalyzer: false,\n    }),',
+      rule: '',
+      replace
+    },
+    CopyWebpackPlugin: {
+      importPlaceholder: /COPY_WEBPACK_PLUGIN_IMPORT/,
+      usePlaceholder: /COPY_WEBPACK_PLUGIN_USE/,
+      rulePlaceholder: '',
+      import: 'const CopyPlugin = require(\'copy-webpack-plugin\')',
+      use: 'new CopyPlugin({\n      patterns: [],\n    }),',
+      rule: '',
+      replace
+    },
+    CleanWebpackPlugin: {
+      importPlaceholder: /CLEAN_WEBPACK_PLUGIN_IMPORT/,
+      usePlaceholder: /CLEAN_WEBPACK_PLUGIN_USE/,
+      rulePlaceholder: '',
+      import: 'const { CleanWebpackPlugin } = require(\'clean-webpack-plugin\')',
+      use: 'new CleanWebpackPlugin(),',
+      rule: '',
+      replace
+    }
+  }
+
+  plugins.forEach(plugin => {
+    contents = WEBPACK_CONTENT[plugin].replace(contents)
+  })
+
+  contents = contents.replace(/^.*(USE|IMPORT|RULE)$/gm, '')
+
+  return contents
 }
 
 module.exports = create

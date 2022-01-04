@@ -1,12 +1,15 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 MINI_CSS_EXTRACT_PLUGIN_IMPORT
+WEBPACK_BUNDLE_ANALYZER_IMPORT
+COPY_WEBPACK_PLUGIN_IMPORT
+CLEAN_WEBPACK_PLUGIN_IMPORT
 
 const config = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js'
+    filename: '[name].[contenthash].js'
   },
   module: {
     rules: [
@@ -32,7 +35,22 @@ const config = {
       template: path.resolve(__dirname, 'src', 'index.html')
     }),
     MINI_CSS_EXTRACT_PLUGIN_USE
-  ]
+    WEBPACK_BUNDLE_ANALYZER_USE
+    COPY_WEBPACK_PLUGIN_USE
+    CLEAN_WEBPACK_PLUGIN_USE
+  ],
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
+  }
 }
 
 module.exports = config

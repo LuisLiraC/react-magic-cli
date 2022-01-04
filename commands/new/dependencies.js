@@ -93,6 +93,12 @@ function installDependencies (projectName, answers) {
   const { dependencies, devDependencies } = getDependencies(answers)
 
   console.log(chalk.grey('Installing dependencies'))
+
+  console.log(chalk.grey('Running...'))
+  console.log(`npm i ${dependencies}\n`)
+
+  console.log(chalk.grey('Running...'))
+  console.log(`npm i ${devDependencies} -D\n`)
   const install = exec(`cd ${projectName} && npm i ${dependencies} && npm i ${devDependencies} -D`)
 
   install.stdout.on('data', (data) => {
