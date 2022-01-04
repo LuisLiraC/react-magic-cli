@@ -14,7 +14,7 @@ const inquirer = require('inquirer')
 const chalk = require('chalk')
 const { BUNDLERS, GENERAL_QUESTIONS, WEBPACK_QUESTIONS } = require('./questions')
 const { DEPENDENCIES, DEV_DEPENDENCIES } = require('./dependencies')
-const stylesConfig = require('./stylesConfig')
+const { getStylesImport, getStylesConfig, getStylesExt } = require('./stylesConfig')
 
 const CURRENT_DIR = process.cwd()
 
@@ -53,6 +53,7 @@ async function create (projectName) {
 
 function createDirectoryContents (templatePath, projectName, answers) {
   const filesToCreate = fs.readdirSync(templatePath)
+  const { stylesheet, plugins } = answers
 
   filesToCreate.forEach((file) => {
     const origFilePath = `${templatePath}/${file}`
@@ -66,9 +67,9 @@ function createDirectoryContents (templatePath, projectName, answers) {
       }
 
       if (file.includes('webpack.config.js')) {
-        const hasMiniCssExtractPlugin = answers.plugins.includes('MiniCSSExtractPlugin')
-        const stylesRule = stylesConfig(answers.stylesheet.toLowerCase(), hasMiniCssExtractPlugin)
-        contents = contents.replace(/STYLES_CONFIG/, stylesRule)
+        const hasMiniCssExtractPlugin = plugins.includes('MiniCSSExtractPlugin')
+        const stylesRule = getStylesConfig(stylesheet, hasMiniCssExtractPlugin)
+        contents = contents.replace(/STYLES_RULE/, stylesRule)
 
         if (hasMiniCssExtractPlugin) {
           contents = contents
@@ -82,30 +83,12 @@ function createDirectoryContents (templatePath, projectName, answers) {
       }
 
       if (file.includes('styles.template')) {
-        const { stylesheet } = answers
-        if (stylesheet === 'CSS' || stylesheet === 'PostCSS') {
-          file = file.replace('.template', '.css')
-        }
-
-        if (stylesheet === 'SCSS') {
-          file = file.replace('.template', '.scss')
-        }
-
-        if (stylesheet === 'SASS') {
-          file = file.replace('.template', '.sass')
-        }
-
-        if (stylesheet === 'LESS') {
-          file = file.replace('.template', '.less')
-        }
-
-        if (stylesheet === 'Stylus') {
-          file = file.replace('.template', '.styl')
-        }
+        const extension = getStylesExt(stylesheet)
+        file = file.replace('.template', extension)
       }
 
       if (file.match(/index\.(j|t)sx?\.template/)) {
-        const stylesImport = getStylesImport(answers.stylesheet)
+        const stylesImport = getStylesImport(stylesheet)
         contents = contents.replace(/STYLES_IMPORT/, stylesImport)
       }
 
@@ -190,24 +173,6 @@ function getDependencies ({ routing, language, bundler, plugins }) {
     dependencies: dependencies.join(' '),
     devDependencies: devDependencies.join(' ')
   }
-}
-
-/**
- * @param {string} stylesheet
- * @returns {string}
- */
-
-function getStylesImport (stylesheet) {
-  const IMPORTS = {
-    CSS: 'import \'./styles/styles.css\'',
-    PostCSS: 'import \'./styles/styles.css\'',
-    SCSS: 'import \'./styles/styles.scss\'',
-    LESS: 'import \'./styles/styles.less\'',
-    SASS: 'import \'./styles/styles.sass\'',
-    Stylus: 'import \'./styles/styles.styl\''
-  }
-
-  return IMPORTS[stylesheet]
 }
 
 module.exports = create

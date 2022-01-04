@@ -15,7 +15,7 @@ const config = {
         use: 'babel-loader',
         exclude: /node_modules/
       },
-      STYLES_CONFIG
+      STYLES_RULE
     ]
   },
   devtool: 'source-map',
