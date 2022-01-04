@@ -13,7 +13,7 @@ const { exec } = require('child_process')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
 const { BUNDLERS, GENERAL_QUESTIONS, WEBPACK_QUESTIONS } = require('./questions')
-const { DEPENDENCIES, DEV_DEPENDENCIES } = require('./dependencies')
+const { getDependencies } = require('./dependencies')
 const { getStylesImport, getStylesConfig, getStylesExt } = require('./stylesConfig')
 
 const CURRENT_DIR = process.cwd()
@@ -121,7 +121,10 @@ function installDependencies (projectName, answers) {
   })
 
   install.stderr.on('data', (data) => {
-    console.log('An error has ocurred while dependencies install. Try it manually.')
+    console.log('An error has ocurred while dependencies install. Try to install manually in your project folder.\n')
+    console.log(`cd ${projectName}\n`)
+    console.log(`npm i ${dependencies}\n`)
+    console.log(`npm i ${devDependencies} -D\n`)
     console.log(data)
   })
 
@@ -129,50 +132,6 @@ function installDependencies (projectName, answers) {
     console.log(chalk.cyan(`Run your project\n  cd ${projectName}\n  npm start`))
     console.log(chalk.cyan('\nHappy coding :)'))
   })
-}
-
-/**
- * @param {Answers} answers
- */
-
-function getDependencies ({ routing, language, bundler, plugins }) {
-  const dependencies = [...DEPENDENCIES.react]
-  const devDependencies = [...DEV_DEPENDENCIES.babel]
-
-  if (language === 'TypeScript') {
-    devDependencies.push(...DEV_DEPENDENCIES.typescript)
-    devDependencies.push(...DEV_DEPENDENCIES.types.react)
-  }
-
-  if (routing) {
-    dependencies.push(...DEPENDENCIES.reactRouter)
-  }
-
-  if (bundler === BUNDLERS.Webpack) {
-    devDependencies.push(...DEV_DEPENDENCIES.webpack)
-    devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.htmlWebpackPlugin)
-
-    if (plugins.includes('MiniCSSExtractPlugin')) {
-      devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.miniCssExtractPlugin)
-    }
-
-    if (plugins.includes('CleanWebpackPlugin')) {
-      devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.cleanWebpackPlugin)
-    }
-
-    if (plugins.includes('CopyWebpackPlugin')) {
-      devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.copyWebpackPlugin)
-    }
-
-    if (plugins.includes('WebpackBundleAnalyzer')) {
-      devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.webpackBundleAnalyzer)
-    }
-  }
-
-  return {
-    dependencies: dependencies.join(' '),
-    devDependencies: devDependencies.join(' ')
-  }
 }
 
 module.exports = create

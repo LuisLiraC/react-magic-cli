@@ -1,3 +1,14 @@
+/**
+ * @typedef {Object} Answers
+ * @property {string} language
+ * @property {string} bundler
+ * @property {boolean} routing
+ * @property {string} stylesheet
+ * @property {string[]} plugins
+ */
+
+const { BUNDLERS } = require('./questions')
+
 const DEPENDENCIES = {
   react: ['react', 'react-dom'],
   reactRouter: ['react-router-dom']
@@ -6,11 +17,11 @@ const DEPENDENCIES = {
 const DEV_DEPENDENCIES = {
   webpack: ['webpack', 'webpack-cli', 'webpack-dev-server'],
   webpackPlugins: {
-    htmlWebpackPlugin: 'html-webpack-plugin',
-    miniCssExtractPlugin: 'mini-css-extract-plugin',
-    webpackBundleAnalyzer: 'webpack-bundle-analyzer',
-    copyWebpackPlugin: 'copy-webpack-plugin',
-    cleanWebpackPlugin: 'clean-webpack-plugin'
+    HtmlWebpackPlugin: 'html-webpack-plugin',
+    MiniCSSExtractPlugin: 'mini-css-extract-plugin',
+    WebpackBundleAnalyzer: 'webpack-bundle-analyzer',
+    CopyWebpackPlugin: 'copy-webpack-plugin',
+    CleanWebpackPlugin: 'clean-webpack-plugin'
   },
   styles: {
     base: ['css-loader', 'style-loader'],
@@ -33,7 +44,38 @@ const DEV_DEPENDENCIES = {
   }
 }
 
+/**
+ * @param {Answers} answers
+ */
+
+function getDependencies ({ routing, language, bundler, plugins }) {
+  const dependencies = [...DEPENDENCIES.react]
+  const devDependencies = [...DEV_DEPENDENCIES.babel]
+
+  if (language === 'TypeScript') {
+    devDependencies.push(...DEV_DEPENDENCIES.typescript)
+    devDependencies.push(...DEV_DEPENDENCIES.types.react)
+  }
+
+  if (routing) {
+    dependencies.push(...DEPENDENCIES.reactRouter)
+  }
+
+  if (bundler === BUNDLERS.Webpack) {
+    devDependencies.push(...DEV_DEPENDENCIES.webpack)
+    devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.HtmlWebpackPlugin)
+
+    for (const plugin of plugins) {
+      devDependencies.push(DEV_DEPENDENCIES.webpackPlugins[plugin])
+    }
+  }
+
+  return {
+    dependencies: dependencies.join(' '),
+    devDependencies: devDependencies.join(' ')
+  }
+}
+
 module.exports = {
-  DEPENDENCIES,
-  DEV_DEPENDENCIES
+  getDependencies
 }
