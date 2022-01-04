@@ -9,10 +9,12 @@
     "prepare": "husky install"
   },
   "files": [
-    "./index.js",
-    "./commands/**/*",
-    "./templates/**/*"
+    "./index.js"
   ],
+  "directories": {
+    "commands": "./commands",
+    "templates": "./templates"
+  },
   "keywords": [
     "React",
     "React CLI",
