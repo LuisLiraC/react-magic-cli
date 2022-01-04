@@ -14,6 +14,7 @@ const inquirer = require('inquirer')
 const chalk = require('chalk')
 const { BUNDLERS, GENERAL_QUESTIONS, WEBPACK_QUESTIONS } = require('./questions')
 const { DEPENDENCIES, DEV_DEPENDENCIES } = require('./dependencies')
+const stylesConfig = require('./stylesConfig')
 
 const CURRENT_DIR = process.cwd()
 
@@ -38,7 +39,7 @@ async function create (projectName) {
   const newDir = `${CURRENT_DIR}/${projectName}`
 
   fs.mkdirSync(newDir)
-  createDirectoryContents(templatePath, projectName)
+  createDirectoryContents(templatePath, projectName, generalAnswers)
 
   console.log(chalk.green('Project created successfully'))
   installDependencies(projectName, generalAnswers)
@@ -47,9 +48,10 @@ async function create (projectName) {
 /**
  * @param {string} templatePath
  * @param {string} projectName
+ * @param {Answers} answers
  */
 
-function createDirectoryContents (templatePath, projectName) {
+function createDirectoryContents (templatePath, projectName, answers) {
   const filesToCreate = fs.readdirSync(templatePath)
 
   filesToCreate.forEach((file) => {
@@ -63,12 +65,57 @@ function createDirectoryContents (templatePath, projectName) {
         contents = contents.replace(/PROJECT_NAME/, projectName)
       }
 
-      const writePath = `${CURRENT_DIR}/${projectName}/${file}`
+      if (file.includes('webpack.config.js')) {
+        const hasMiniCssExtractPlugin = answers.plugins.includes('MiniCSSExtractPlugin')
+        const stylesRule = stylesConfig(answers.stylesheet.toLowerCase(), hasMiniCssExtractPlugin)
+        contents = contents.replace(/STYLES_CONFIG/, stylesRule)
+
+        if (hasMiniCssExtractPlugin) {
+          contents = contents
+            .replace(/MINI_CSS_EXTRACT_PLUGIN_IMPORT/, 'const MiniCssExtractPlugin = require(\'mini-css-extract-plugin\')')
+            .replace(/MINI_CSS_EXTRACT_PLUGIN_USE/, 'new MiniCssExtractPlugin(),')
+        } else {
+          contents = contents
+            .replace(/MINI_CSS_EXTRACT_PLUGIN_IMPORT/, '')
+            .replace(/MINI_CSS_EXTRACT_PLUGIN_USE/, '')
+        }
+      }
+
+      if (file.includes('styles.template')) {
+        const { stylesheet } = answers
+        if (stylesheet === 'CSS' || stylesheet === 'PostCSS') {
+          file = file.replace('.template', '.css')
+        }
+
+        if (stylesheet === 'SCSS') {
+          file = file.replace('.template', '.scss')
+        }
+
+        if (stylesheet === 'SASS') {
+          file = file.replace('.template', '.sass')
+        }
+
+        if (stylesheet === 'LESS') {
+          file = file.replace('.template', '.less')
+        }
+
+        if (stylesheet === 'Stylus') {
+          file = file.replace('.template', '.styl')
+        }
+      }
+
+      if (file.match(/index\.(j|t)sx?\.template/)) {
+        const stylesImport = getStylesImport(answers.stylesheet)
+        contents = contents.replace(/STYLES_IMPORT/, stylesImport)
+      }
+
+      const newFileName = file.replace('.template', '')
+      const writePath = `${CURRENT_DIR}/${projectName}/${newFileName}`
 
       fs.writeFileSync(writePath, contents, 'utf8')
     } else if (stats.isDirectory()) {
       fs.mkdirSync(`${CURRENT_DIR}/${projectName}/${file}`)
-      createDirectoryContents(`${templatePath}/${file}`, `${projectName}/${file}`)
+      createDirectoryContents(`${templatePath}/${file}`, `${projectName}/${file}`, answers)
     }
   })
 }
@@ -142,6 +189,28 @@ function getDependencies (answers) {
   return {
     dependencies: dependencies.join(' '),
     devDependencies: devDependencies.join(' ')
+  }
+}
+
+function getStylesImport (stylesheet) {
+  if (stylesheet === 'CSS' || stylesheet === 'PostCSS') {
+    return 'import \'./styles/styles.css\''
+  }
+
+  if (stylesheet === 'SCSS') {
+    return 'import \'./styles/styles.scss\''
+  }
+
+  if (stylesheet === 'SASS') {
+    return 'import \'./styles/styles.sass\''
+  }
+
+  if (stylesheet === 'LESS') {
+    return 'import \'./styles/styles.less\''
+  }
+
+  if (stylesheet === 'Stylus') {
+    return 'import \'./styles/styles.styl\''
   }
 }
 

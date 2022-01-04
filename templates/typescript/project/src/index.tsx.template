@@ -1,5 +1,9 @@
 import * as React from 'react'
 import { render } from 'react-dom'
 import App from './components/App'
+STYLES_IMPORT
 
-render(<App />, document.getElementById('root'))
+render(
+  <App message='Hello World' />,
+  document.getElementById('root')
+)
