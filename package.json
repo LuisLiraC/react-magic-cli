@@ -1,6 +1,6 @@
 {
   "name": "react-magic-cli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A CLI for React to generate projects and components using the command line.",
   "main": "index.js",
   "scripts": {
