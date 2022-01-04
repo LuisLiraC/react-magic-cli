@@ -9,11 +9,10 @@
 
 const fs = require('fs')
 const path = require('path')
-const { exec } = require('child_process')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
 const { BUNDLERS, GENERAL_QUESTIONS, WEBPACK_QUESTIONS } = require('./questions')
-const { getDependencies } = require('./dependencies')
+const { installDependencies } = require('./dependencies')
 const { getStylesImport, getStylesConfig, getStylesExt } = require('./stylesConfig')
 
 const CURRENT_DIR = process.cwd()
@@ -100,37 +99,6 @@ function createDirectoryContents (templatePath, projectName, answers) {
       fs.mkdirSync(`${CURRENT_DIR}/${projectName}/${file}`)
       createDirectoryContents(`${templatePath}/${file}`, `${projectName}/${file}`, answers)
     }
-  })
-}
-
-/**
- * @param {string} projectName
- * @param {Answers} answers
- */
-
-function installDependencies (projectName, answers) {
-  const { dependencies, devDependencies } = getDependencies(answers)
-
-  console.log(chalk.grey('Installing dependencies'))
-  const install = exec(`cd ${projectName} && npm i ${dependencies} && npm i ${devDependencies} -D`)
-
-  install.stdout.on('data', (data) => {
-    if (data.includes('added')) {
-      console.log(data)
-    }
-  })
-
-  install.stderr.on('data', (data) => {
-    console.log('An error has ocurred while dependencies install. Try to install manually in your project folder.\n')
-    console.log(`cd ${projectName}\n`)
-    console.log(`npm i ${dependencies}\n`)
-    console.log(`npm i ${devDependencies} -D\n`)
-    console.log(data)
-  })
-
-  install.on('exit', () => {
-    console.log(chalk.cyan(`Run your project\n  cd ${projectName}\n  npm start`))
-    console.log(chalk.cyan('\nHappy coding :)'))
   })
 }
 

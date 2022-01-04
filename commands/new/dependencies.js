@@ -7,6 +7,8 @@
  * @property {string[]} plugins
  */
 
+const { exec } = require('child_process')
+const chalk = require('chalk')
 const { BUNDLERS } = require('./questions')
 
 const DEPENDENCIES = {
@@ -26,10 +28,11 @@ const DEV_DEPENDENCIES = {
   styles: {
     base: ['css-loader', 'style-loader'],
     preprocessors: {
-      postcss: ['postcss-loader', 'autoprefixer'],
-      sass: ['sass-loader'],
-      less: ['less', 'less-loader'],
-      stylus: ['stylus', 'stylus-loader']
+      PostCSS: ['postcss-loader', 'autoprefixer'],
+      SASS: ['sass-loader'],
+      SCSS: ['sass-loader'],
+      LESS: ['less', 'less-loader'],
+      Stylus: ['stylus', 'stylus-loader']
     }
   },
   babel: [
@@ -47,8 +50,7 @@ const DEV_DEPENDENCIES = {
 /**
  * @param {Answers} answers
  */
-
-function getDependencies ({ routing, language, bundler, plugins }) {
+function getDependencies ({ routing, language, bundler, plugins, stylesheet }) {
   const dependencies = [...DEPENDENCIES.react]
   const devDependencies = [...DEV_DEPENDENCIES.babel]
 
@@ -76,6 +78,36 @@ function getDependencies ({ routing, language, bundler, plugins }) {
   }
 }
 
+/**
+ * @param {string} projectName
+ * @param {Answers} answers
+ */
+function installDependencies (projectName, answers) {
+  const { dependencies, devDependencies } = getDependencies(answers)
+
+  console.log(chalk.grey('Installing dependencies'))
+  const install = exec(`cd ${projectName} && npm i ${dependencies} && npm i ${devDependencies} -D`)
+
+  install.stdout.on('data', (data) => {
+    if (data.includes('added')) {
+      console.log(data)
+    }
+  })
+
+  install.stderr.on('data', (data) => {
+    console.log('An error has ocurred while dependencies install. Try to install manually in your project folder.\n')
+    console.log(`cd ${projectName}\n`)
+    console.log(`npm i ${dependencies}\n`)
+    console.log(`npm i ${devDependencies} -D\n`)
+    console.log(data)
+  })
+
+  install.on('exit', () => {
+    console.log(chalk.cyan(`Run your project\n  cd ${projectName}\n  npm start`))
+    console.log(chalk.cyan('\nHappy coding :)'))
+  })
+}
+
 module.exports = {
-  getDependencies
+  installDependencies
 }
