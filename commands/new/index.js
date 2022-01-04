@@ -52,7 +52,6 @@ async function create (projectName) {
 
 function createDirectoryContents (templatePath, projectName, answers) {
   const filesToCreate = fs.readdirSync(templatePath)
-  const { stylesheet, plugins } = answers
 
   filesToCreate.forEach((file) => {
     const origFilePath = `${templatePath}/${file}`
@@ -60,36 +59,7 @@ function createDirectoryContents (templatePath, projectName, answers) {
 
     if (stats.isFile()) {
       let contents = fs.readFileSync(origFilePath, 'utf8')
-
-      if (file.includes('package.json')) {
-        contents = contents.replace(/PROJECT_NAME/, projectName)
-      }
-
-      if (file.includes('webpack.config.js')) {
-        const hasMiniCssExtractPlugin = plugins.includes('MiniCSSExtractPlugin')
-        const stylesRule = getStylesConfig(stylesheet, hasMiniCssExtractPlugin)
-        contents = contents.replace(/STYLES_RULE/, stylesRule)
-
-        if (hasMiniCssExtractPlugin) {
-          contents = contents
-            .replace(/MINI_CSS_EXTRACT_PLUGIN_IMPORT/, 'const MiniCssExtractPlugin = require(\'mini-css-extract-plugin\')')
-            .replace(/MINI_CSS_EXTRACT_PLUGIN_USE/, 'new MiniCssExtractPlugin(),')
-        } else {
-          contents = contents
-            .replace(/MINI_CSS_EXTRACT_PLUGIN_IMPORT/, '')
-            .replace(/MINI_CSS_EXTRACT_PLUGIN_USE/, '')
-        }
-      }
-
-      if (file.includes('styles.template')) {
-        const extension = getStylesExt(stylesheet)
-        file = file.replace('.template', extension)
-      }
-
-      if (file.match(/index\.(j|t)sx?\.template/)) {
-        const stylesImport = getStylesImport(stylesheet)
-        contents = contents.replace(/STYLES_IMPORT/, stylesImport)
-      }
+      contents = replaceContents(file, contents, projectName, answers)
 
       const newFileName = file.replace('.template', '')
       const writePath = `${CURRENT_DIR}/${projectName}/${newFileName}`
@@ -100,6 +70,47 @@ function createDirectoryContents (templatePath, projectName, answers) {
       createDirectoryContents(`${templatePath}/${file}`, `${projectName}/${file}`, answers)
     }
   })
+}
+
+/**
+ * @param {string} file
+ * @param {string} contents
+ * @param {string} projectName
+ * @param {Answers} param3
+ */
+
+function replaceContents (file, contents, projectName, { plugins, stylesheet }) {
+  if (file.includes('package.json')) {
+    contents = contents.replace(/PROJECT_NAME/, projectName)
+  }
+
+  if (file.includes('webpack.config.js')) {
+    const hasMiniCssExtractPlugin = plugins.includes('MiniCSSExtractPlugin')
+    const stylesRule = getStylesConfig(stylesheet, hasMiniCssExtractPlugin)
+    contents = contents.replace(/STYLES_RULE/, stylesRule)
+
+    if (hasMiniCssExtractPlugin) {
+      contents = contents
+        .replace(/MINI_CSS_EXTRACT_PLUGIN_IMPORT/, 'const MiniCssExtractPlugin = require(\'mini-css-extract-plugin\')')
+        .replace(/MINI_CSS_EXTRACT_PLUGIN_USE/, 'new MiniCssExtractPlugin(),')
+    } else {
+      contents = contents
+        .replace(/MINI_CSS_EXTRACT_PLUGIN_IMPORT/, '')
+        .replace(/MINI_CSS_EXTRACT_PLUGIN_USE/, '')
+    }
+  }
+
+  if (file.includes('styles.template')) {
+    const extension = getStylesExt(stylesheet)
+    file = file.replace('.template', extension)
+  }
+
+  if (file.match(/index\.(j|t)sx?\.template/)) {
+    const stylesImport = getStylesImport(stylesheet)
+    contents = contents.replace(/STYLES_IMPORT/, stylesImport)
+  }
+
+  return contents
 }
 
 module.exports = create
