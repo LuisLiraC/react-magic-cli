@@ -152,36 +152,36 @@ function installDependencies (projectName, answers) {
  * @param {Answers} answers
  */
 
-function getDependencies (answers) {
+function getDependencies ({ routing, language, bundler, plugins }) {
   const dependencies = [...DEPENDENCIES.react]
   const devDependencies = [...DEV_DEPENDENCIES.babel]
 
-  if (answers.language === 'TypeScript') {
+  if (language === 'TypeScript') {
     devDependencies.push(...DEV_DEPENDENCIES.typescript)
     devDependencies.push(...DEV_DEPENDENCIES.types.react)
   }
 
-  if (answers.routing) {
+  if (routing) {
     dependencies.push(...DEPENDENCIES.reactRouter)
   }
 
-  if (answers.bundler === BUNDLERS.Webpack) {
+  if (bundler === BUNDLERS.Webpack) {
     devDependencies.push(...DEV_DEPENDENCIES.webpack)
     devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.htmlWebpackPlugin)
 
-    if (answers.plugins.includes('MiniCSSExtractPlugin')) {
+    if (plugins.includes('MiniCSSExtractPlugin')) {
       devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.miniCssExtractPlugin)
     }
 
-    if (answers.plugins.includes('CleanWebpackPlugin')) {
+    if (plugins.includes('CleanWebpackPlugin')) {
       devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.cleanWebpackPlugin)
     }
 
-    if (answers.plugins.includes('CopyWebpackPlugin')) {
+    if (plugins.includes('CopyWebpackPlugin')) {
       devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.copyWebpackPlugin)
     }
 
-    if (answers.plugins.includes('WebpackBundleAnalyzer')) {
+    if (plugins.includes('WebpackBundleAnalyzer')) {
       devDependencies.push(DEV_DEPENDENCIES.webpackPlugins.webpackBundleAnalyzer)
     }
   }
@@ -192,26 +192,22 @@ function getDependencies (answers) {
   }
 }
 
+/**
+ * @param {string} stylesheet
+ * @returns {string}
+ */
+
 function getStylesImport (stylesheet) {
-  if (stylesheet === 'CSS' || stylesheet === 'PostCSS') {
-    return 'import \'./styles/styles.css\''
+  const IMPORTS = {
+    CSS: 'import \'./styles/styles.css\'',
+    PostCSS: 'import \'./styles/styles.css\'',
+    SCSS: 'import \'./styles/styles.scss\'',
+    LESS: 'import \'./styles/styles.less\'',
+    SASS: 'import \'./styles/styles.sass\'',
+    Stylus: 'import \'./styles/styles.styl\''
   }
 
-  if (stylesheet === 'SCSS') {
-    return 'import \'./styles/styles.scss\''
-  }
-
-  if (stylesheet === 'SASS') {
-    return 'import \'./styles/styles.sass\''
-  }
-
-  if (stylesheet === 'LESS') {
-    return 'import \'./styles/styles.less\''
-  }
-
-  if (stylesheet === 'Stylus') {
-    return 'import \'./styles/styles.styl\''
-  }
+  return IMPORTS[stylesheet]
 }
 
 module.exports = create
