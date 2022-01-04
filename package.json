@@ -1,6 +1,6 @@
 {
-  "name": "react-cli-project",
-  "version": "1.0.1",
+  "name": "react-magic-cli",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,22 +9,26 @@
     "prepare": "husky install"
   },
   "keywords": [
-    "react",
-    "javascript",
-    "typescript",
+    "React",
+    "React CLI",
+    "react-cli",
+    "JavaScript",
+    "TypeScript",
+    "CLI",
     "project",
-    "generator"
+    "generator",
+    "build-tools"
   ],
-  "homepage": "https://github.com/LuisLiraC/react-cli-project",
+  "homepage": "https://github.com/LuisLiraC/react-magic-cli",
   "bin": {
     "rg": "./index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/LuisLiraC/react-cli-project"
+    "url": "https://github.com/LuisLiraC/react-magic-cli"
   },
   "bugs": {
-    "url": "https://github.com/LuisLiraC/react-cli-project/issues"
+    "url": "https://github.com/LuisLiraC/react-magic-cli/issues"
   },
   "author": {
     "name": "Luis Lira",
