@@ -1,19 +1,12 @@
 {
   "name": "react-magic-cli",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A CLI for React to generate projects and components using the command line.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "prepare": "husky install"
-  },
-  "files": [
-    "./index.js"
-  ],
-  "directories": {
-    "commands": "./commands/",
-    "templates": "./templates/"
   },
   "keywords": [
     "React",
