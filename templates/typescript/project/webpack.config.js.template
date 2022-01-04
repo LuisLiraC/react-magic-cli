@@ -23,6 +23,21 @@ const config = {
         loader: 'ts-loader',
         exclude: /node_modules/
       },
+      {
+        test: /\.svg$/,
+        use: 'file-loader'
+      },
+      {
+        test: /\.(png|jpg|gif)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192
+            }
+          }
+        ]
+      },
       STYLES_RULE
     ]
   },

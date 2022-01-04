@@ -10,6 +10,7 @@
 const { exec } = require('child_process')
 const chalk = require('chalk')
 const { BUNDLERS } = require('./questions')
+const { getPluginsDependencies } = require('./webpackContent')
 
 const DEPENDENCIES = {
   react: ['react', 'react-dom'],
@@ -17,14 +18,8 @@ const DEPENDENCIES = {
 }
 
 const DEV_DEPENDENCIES = {
-  webpack: ['webpack', 'webpack-cli', 'webpack-dev-server'],
-  webpackPlugins: {
-    HtmlWebpackPlugin: 'html-webpack-plugin',
-    MiniCSSExtractPlugin: 'mini-css-extract-plugin',
-    WebpackBundleAnalyzer: 'webpack-bundle-analyzer',
-    CopyWebpackPlugin: 'copy-webpack-plugin',
-    CleanWebpackPlugin: 'clean-webpack-plugin'
-  },
+  webpack: ['webpack', 'webpack-cli', 'webpack-dev-server', 'file-loader', 'url-loader'],
+  webpackPlugins: getPluginsDependencies(),
   styles: {
     base: ['css-loader', 'style-loader'],
     preprocessors: {

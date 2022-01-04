@@ -1,3 +1,5 @@
+const { getPluginsNames } = require('./webpackContent')
+
 const BUNDLERS = {
   Webpack: 'Webpack',
   Snowpack: 'Snowpack'
@@ -41,12 +43,7 @@ const WEBPACK_QUESTIONS = [
     name: 'plugins',
     type: 'checkbox',
     message: 'What Webpack plugins will you use?',
-    choices: [
-      'MiniCSSExtractPlugin',
-      'CleanWebpackPlugin',
-      'CopyWebpackPlugin',
-      'WebpackBundleAnalyzer'
-    ]
+    choices: getPluginsNames()
   }
 ]
 
