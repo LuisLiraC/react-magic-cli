@@ -13,7 +13,7 @@ const inquirer = require('inquirer')
 const chalk = require('chalk')
 const { BUNDLERS, GENERAL_QUESTIONS, WEBPACK_QUESTIONS } = require('./questions')
 const { installDependencies } = require('./dependencies')
-const { getStylesImport, getStylesConfig, getStylesExt } = require('./stylesConfig')
+const { getStylesImport, getStylesConfig, getStylesExt, getStyleContent } = require('./stylesConfig')
 
 const CURRENT_DIR = process.cwd()
 
@@ -39,6 +39,7 @@ async function create (projectName) {
 
   fs.mkdirSync(newDir)
   createDirectoryContents(templatePath, projectName, generalAnswers)
+  createExtraFiles(projectName, generalAnswers)
 
   console.log(chalk.green('Project created successfully'))
   installDependencies(projectName, generalAnswers)
@@ -59,9 +60,10 @@ function createDirectoryContents (templatePath, projectName, answers) {
 
     if (stats.isFile()) {
       let contents = fs.readFileSync(origFilePath, 'utf8')
-      contents = replaceContents(file, contents, projectName, answers)
 
-      const newFileName = file.replace('.template', '')
+      const { contents: newContent, newFileName } = replaceContents(file, contents, projectName, answers)
+      contents = newContent
+
       const writePath = `${CURRENT_DIR}/${projectName}/${newFileName}`
 
       fs.writeFileSync(writePath, contents, 'utf8')
@@ -70,6 +72,20 @@ function createDirectoryContents (templatePath, projectName, answers) {
       createDirectoryContents(`${templatePath}/${file}`, `${projectName}/${file}`, answers)
     }
   })
+}
+
+/**
+ * @param {string} projectName
+ * @param {Answers} answers
+ */
+
+function createExtraFiles (projectName, answers) {
+  if (answers.stylesheet === 'PostCSS') {
+    const filename = 'postcss.config.js'
+    const writePath = `${CURRENT_DIR}/${projectName}/${filename}`
+    const contents = fs.readFileSync(path.join(__dirname, `/../../templates/others/${filename}`), 'utf-8')
+    fs.writeFileSync(writePath, contents, 'utf-8')
+  }
 }
 
 /**
@@ -103,6 +119,7 @@ function replaceContents (file, contents, projectName, { plugins, stylesheet }) 
   if (file.includes('styles.template')) {
     const extension = getStylesExt(stylesheet)
     file = file.replace('.template', extension)
+    contents = getStyleContent(stylesheet)
   }
 
   if (file.match(/index\.(j|t)sx?\.template/)) {
@@ -110,7 +127,12 @@ function replaceContents (file, contents, projectName, { plugins, stylesheet }) 
     contents = contents.replace(/STYLES_IMPORT/, stylesImport)
   }
 
-  return contents
+  const newFileName = file.replace('.template', '')
+
+  return {
+    contents,
+    newFileName
+  }
 }
 
 module.exports = create

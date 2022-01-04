@@ -29,8 +29,8 @@ const DEV_DEPENDENCIES = {
     base: ['css-loader', 'style-loader'],
     preprocessors: {
       PostCSS: ['postcss-loader', 'autoprefixer'],
-      SASS: ['sass-loader'],
-      SCSS: ['sass-loader'],
+      SASS: ['sass', 'sass-loader'],
+      SCSS: ['sass', 'sass-loader'],
       LESS: ['less', 'less-loader'],
       Stylus: ['stylus', 'stylus-loader']
     }
@@ -52,7 +52,10 @@ const DEV_DEPENDENCIES = {
  */
 function getDependencies ({ routing, language, bundler, plugins, stylesheet }) {
   const dependencies = [...DEPENDENCIES.react]
-  const devDependencies = [...DEV_DEPENDENCIES.babel]
+  const devDependencies = [
+    ...DEV_DEPENDENCIES.babel,
+    ...DEV_DEPENDENCIES.styles.base
+  ]
 
   if (language === 'TypeScript') {
     devDependencies.push(...DEV_DEPENDENCIES.typescript)
@@ -70,6 +73,10 @@ function getDependencies ({ routing, language, bundler, plugins, stylesheet }) {
     for (const plugin of plugins) {
       devDependencies.push(DEV_DEPENDENCIES.webpackPlugins[plugin])
     }
+  }
+
+  if (stylesheet !== 'CSS') {
+    devDependencies.push(...DEV_DEPENDENCIES.styles.preprocessors[stylesheet])
   }
 
   return {

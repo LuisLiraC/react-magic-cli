@@ -11,7 +11,7 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: ''
+    content: 'h1 {\n  color: red;\n}'
   },
   PostCSS: {
     import: 'import \'./styles/styles.css\'',
@@ -31,7 +31,7 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: ''
+    content: 'h1 {\n  color: red;\n}'
   },
   SASS: {
     import: 'import \'./styles/styles.sass\'',
@@ -46,7 +46,7 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: ''
+    content: 'h1\n  color: red\n'
   },
   SCSS: {
     import: 'import \'./styles/styles.scss\'',
@@ -61,7 +61,7 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: ''
+    content: 'h1 {\n  color: red;\n}'
   },
   LESS: {
     import: 'import \'./styles/styles.less\'',
@@ -76,7 +76,7 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: ''
+    content: 'h1 {\n  color: red;\n}'
   },
   Stylus: {
     import: 'import \'./styles/styles.styl\'',
@@ -91,7 +91,7 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: ''
+    content: 'h1\n  color red'
   }
 }
 
@@ -129,8 +129,17 @@ function getStylesExt (stylesheet) {
   return STYLES_CONFIG[stylesheet].extension
 }
 
+/**
+ * @param {string} stylesheet
+ * @returns {string}
+ */
+function getStyleContent (stylesheet) {
+  return STYLES_CONFIG[stylesheet].content
+}
+
 module.exports = {
   getStylesConfig,
   getStylesImport,
-  getStylesExt
+  getStylesExt,
+  getStyleContent
 }
