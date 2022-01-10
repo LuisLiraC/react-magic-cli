@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const chalk = require('chalk')
 const CURRENT_DIR = process.cwd()
 
 /**
@@ -22,6 +23,7 @@ function create (componentName) {
   const writePath = `${CURRENT_DIR}/src/components/${newFileName}`
 
   fs.writeFileSync(writePath, contents, 'utf-8')
+  console.log(chalk.green('Component created successfully in ./src/components'))
 }
 
 module.exports = create
