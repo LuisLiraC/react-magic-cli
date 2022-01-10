@@ -1,6 +1,11 @@
-import * as React from 'react'
+import React, { StrictMode } from 'react'
 import { render } from 'react-dom'
 import App from './components/App'
 STYLES_IMPORT
 
-render(<App />, document.getElementById('root'))
+render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+  document.getElementById('root')
+)
