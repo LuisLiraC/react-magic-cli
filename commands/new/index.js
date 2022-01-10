@@ -15,6 +15,7 @@ const { BUNDLERS, GENERAL_QUESTIONS, WEBPACK_QUESTIONS } = require('./questions'
 const { installDependencies } = require('./dependencies')
 const { getStylesImport, getStylesExt, getStyleContent, getStylesConfig } = require('./stylesConfig')
 const { replaceOptionalPlugins } = require('./webpackContent')
+const { getAppContent, getIndexContent } = require('./content')
 
 const CURRENT_DIR = process.cwd()
 
@@ -96,7 +97,7 @@ function createExtraFiles (projectName, answers) {
  * @param {Answers} answers
  */
 
-function replaceContents (file, contents, projectName, { plugins, stylesheet }) {
+function replaceContents (file, contents, projectName, { language, plugins, stylesheet, routing }) {
   if (file.includes('package.json')) {
     contents = contents.replace(/PROJECT_NAME/, projectName)
   }
@@ -114,8 +115,16 @@ function replaceContents (file, contents, projectName, { plugins, stylesheet }) 
   }
 
   if (file.match(/index\.(j|t)sx?\.template/)) {
+    const indexContent = getIndexContent(language.toLowerCase(), routing)
+    contents = contents.replace(/CONTENT/, indexContent)
+
     const stylesImport = getStylesImport(stylesheet)
     contents = contents.replace(/STYLES_IMPORT/, stylesImport)
+  }
+
+  if (file.match(/App\.(j|t)sx\.template/)) {
+    const appContent = getAppContent(language.toLowerCase(), routing)
+    contents = contents.replace(/CONTENT/, appContent)
   }
 
   const newFileName = file.replace('.template', '')

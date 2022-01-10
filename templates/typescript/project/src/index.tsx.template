@@ -1,11 +1,1 @@
-import React, { StrictMode } from 'react'
-import { render } from 'react-dom'
-import App from './components/App'
-STYLES_IMPORT
-
-render(
-  <StrictMode>
-    <App message='Hello World' />
-  </StrictMode>,
-  document.getElementById('root')
-)
+CONTENT
