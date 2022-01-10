@@ -2,8 +2,6 @@ const CONTENT = {
   javascript: {
     app: {
       noRouting: `
-import React from 'react'
-
 function App (props) {
   return (
     <h1>Hello World</h1>
@@ -12,7 +10,6 @@ function App (props) {
 
 export default App`,
       withRouting: `
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default function App() {
@@ -35,7 +32,7 @@ export function About() {
     },
     index: {
       noRouting: `
-import React, { StrictMode } from 'react'
+import { StrictMode } from 'react'
 import { render } from 'react-dom'
 import App from './components/App'
 STYLES_IMPORT
@@ -47,9 +44,10 @@ render(
   document.getElementById('root')
 )`,
       withRouting: `
-import React, { StrictMode } from 'react'
+import { StrictMode } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ReactDOM from 'react-dom'
+STYLES_IMPORT
 
 import App, { About } from './components/App'
 
@@ -70,8 +68,6 @@ ReactDOM.render(
   typescript: {
     app: {
       noRouting: `
-import React from 'react'
-
 interface Props {
   message: string
 }
@@ -84,7 +80,6 @@ function App(props: Props) {
 
 export default App`,
       withRouting: `
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 interface Props {
@@ -111,7 +106,7 @@ export function About() {
     },
     index: {
       noRouting: `
-import React, { StrictMode } from 'react'
+import { StrictMode } from 'react'
 import { render } from 'react-dom'
 import App from './components/App'
 STYLES_IMPORT
@@ -123,9 +118,10 @@ render(
   document.getElementById('root')
 )`,
       withRouting: `
-import React, { StrictMode } from 'react'
+import { StrictMode } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ReactDOM from 'react-dom'
+STYLES_IMPORT
 
 import App, { About } from './components/App'
 
