@@ -11,7 +11,11 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: 'h1 {\n  color: red;\n}'
+    content: `
+h1 {
+  color: red;
+}
+`
   },
   PostCSS: {
     import: 'import \'./styles/styles.css\'',
@@ -31,7 +35,11 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: 'h1 {\n  color: red;\n}'
+    content: `
+h1 {
+  color: red;
+}
+`
   },
   SASS: {
     import: 'import \'./styles/styles.sass\'',
@@ -46,7 +54,11 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: 'h1\n  color: red\n'
+    content: `
+$color: red
+h1
+  color: $color
+`
   },
   SCSS: {
     import: 'import \'./styles/styles.scss\'',
@@ -61,7 +73,12 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: 'h1 {\n  color: red;\n}'
+    content: `
+$color: red;
+h1 {
+  color: $color;
+}
+`
   },
   LESS: {
     import: 'import \'./styles/styles.less\'',
@@ -76,7 +93,12 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: 'h1 {\n  color: red;\n}'
+    content: `
+@color: red;
+h1 {
+  color: @color;
+}
+`
   },
   Stylus: {
     import: 'import \'./styles/styles.styl\'',
@@ -91,7 +113,10 @@ const STYLES_CONFIG = {
         ]
       },
     `,
-    content: 'h1\n  color red'
+    content: `
+$color: red
+h1
+  color $color`
   }
 }
 
