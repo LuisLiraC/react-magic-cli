@@ -9,7 +9,17 @@ npm i -g react-magic-cli
 
 ## Usage
 ```bash
-rg <command> <component/project name>
+rg <command> <resource-name>
+
+rg new MyProject
+
+rg component MyComponent
+```
+
+Current commands
+```txt
+new                     Creates a project based on your answers
+component               Creates a component in ./src/components
 ```
 
 ## Examples
