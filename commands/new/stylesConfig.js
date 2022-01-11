@@ -12,8 +12,22 @@ const STYLES_CONFIG = {
       },
     `,
     content: `
-h1 {
-  color: red;
+:root {
+  --bg-color: #f5f5f5
+}
+
+body {
+  margin: 0;
+}
+
+.App {
+  height: 100vh;
+  width: 100vw;
+  font-family: sans-serif;
+  display: grid;
+  place-items: center;
+  background-color: var(--bg-color);
+  text-align: center;
 }
 `
   },
@@ -36,8 +50,22 @@ h1 {
       },
     `,
     content: `
-h1 {
-  color: red;
+:root {
+  --bg-color: #f5f5f5
+}
+
+body {
+  margin: 0;
+}
+
+.App {
+  height: 100vh;
+  width: 100vw;
+  font-family: sans-serif;
+  display: grid;
+  place-items: center;
+  background-color: var(--bg-color);
+  text-align: center;
 }
 `
   },
@@ -55,9 +83,19 @@ h1 {
       },
     `,
     content: `
-$color: red
-h1
-  color: $color
+$bg-color: #f5f5f5
+
+body
+  margin: 0
+
+.App
+  height: 100vh
+  width: 100vw
+  font-family: sans-serif
+  display: grid
+  place-items: center
+  background-color: bg-color
+  text-align: center
 `
   },
   SCSS: {
@@ -74,9 +112,20 @@ h1
       },
     `,
     content: `
-$color: red;
-h1 {
-  color: $color;
+$bg-color: #f5f5f5;
+
+body {
+  margin: 0;
+}
+
+.App {
+  height: 100vh;
+  width: 100vw;
+  font-family: sans-serif;
+  display: grid;
+  place-items: center;
+  background-color: $bg-color;
+  text-align: center;
 }
 `
   },
@@ -94,9 +143,20 @@ h1 {
       },
     `,
     content: `
-@color: red;
-h1 {
-  color: @color;
+@bg-color: #f5f5f5;
+
+body {
+  margin: 0;
+}
+
+.App {
+  height: 100vh;
+  width: 100vw;
+  font-family: sans-serif;
+  display: grid;
+  place-items: center;
+  background-color: @bg-color;
+  text-align: center;
 }
 `
   },
@@ -114,9 +174,20 @@ h1 {
       },
     `,
     content: `
-$color: red
-h1
-  color $color`
+bg-color #f5f5f5
+
+body
+  margin 0
+
+.App
+  height 100vh
+  width 100vw
+  font-family sans-serif
+  display grid
+  place-items center
+  background-color bg-color
+  text-align center
+`
   }
 }
 

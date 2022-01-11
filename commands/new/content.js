@@ -4,7 +4,16 @@ const CONTENT = {
       noRouting: `
 function App (props) {
   return (
-    <h1>Hello World</h1>
+    <div className='App'>
+      <div>
+        <h1>Hello World</h1>
+        <p>Thank you for use React Magic CLI</p>
+        <p>
+          You can share your comments or read more about the project on{' '}
+          <a href="https://github.com/LuisLiraC/react-magic-cli/" target="blank" rel="noopener noreferrer">GitHub</a>
+        </p>
+      </div>
+    </div>
   )
 }
 
@@ -14,18 +23,27 @@ import { Link } from 'react-router-dom'
 
 export default function App() {
   return (
-    <div>
-      <h1>Hello World</h1>
-      <Link to='/about'>About</Link>
+    <div className='App'>
+      <div>
+        <h1>Hello World</h1>
+        <p>Thank you for use React Magic CLI</p>
+        <p>
+          You can share your comments or read more about the project on{' '}
+          <a href="https://github.com/LuisLiraC/react-magic-cli/" target="blank" rel="noopener noreferrer">GitHub</a>
+        </p>
+        <Link to='/about'>About</Link>
+      </div>
     </div>
   )
 }
 
 export function About() {
   return (
-    <div>
-      <h1>About Works</h1>
-      <Link to='/'>Home</Link>
+    <div className='App'>
+      <div>
+        <h1>About Works</h1>
+        <Link to='/'>Home</Link>
+      </div>
     </div>
   )
 }`
@@ -74,7 +92,16 @@ interface Props {
 
 function App(props: Props) {
   return (
-    <h1>{props.message}</h1>
+    <div className='App'>
+      <div>
+        <h1>{props.message}</h1>
+        <p>Thank you for use React Magic CLI</p>
+        <p>
+          You can share your comments or read more about the project on
+          <a href="https://github.com/LuisLiraC/react-magic-cli/" target="blank" rel="noopener noreferrer">GitHub</a>
+        </p>
+      </div>
+    </div>
   )
 }
 
@@ -88,18 +115,27 @@ interface Props {
 
 export default function App(props: Props) {
   return (
-    <div>
-      <h1>{props.message}</h1>
-      <Link to='/about'>About</Link>
+    <div className='App'>
+      <div>
+        <h1>{props.message}</h1>
+        <p>Thank you for use React Magic CLI</p>
+        <p>
+          You can share your comments or read more about the project on
+          <a href="https://github.com/LuisLiraC/react-magic-cli/" target="blank" rel="noopener noreferrer">GitHub</a>
+        </p>
+        <Link to='/about'>About</Link>
+      </div>
     </div>
   )
 }
 
 export function About() {
   return (
-    <div>
-      <h1>About Works</h1>
-      <Link to='/'>Home</Link>
+    <div className='App'>
+      <div>
+        <h1>About Works</h1>
+        <Link to='/'>Home</Link>
+      </div>
     </div>
   )
 }`
