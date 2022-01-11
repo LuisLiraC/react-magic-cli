@@ -141,11 +141,25 @@ ReactDOM.render(
   }
 }
 
+/**
+ *
+ * @param {string} language
+ * @param {boolean} routing
+ * @returns {string}
+ */
+
 function getIndexContent (language, routing) {
   return routing
     ? CONTENT[language].index.withRouting
     : CONTENT[language].index.noRouting
 }
+
+/**
+ *
+ * @param {string} language
+ * @param {boolean} routing
+ * @returns {string}
+ */
 
 function getAppContent (language, routing) {
   return routing
