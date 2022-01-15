@@ -13,11 +13,7 @@ const config = {
   },
   module: {
     rules: [
-      {
-        test: /\.(js|jsx)$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
-      },
+      LANGUAGE_RULE
       {
         test: /\.svg$/,
         use: 'file-loader'
@@ -38,7 +34,7 @@ const config = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   devServer: {
     static: {

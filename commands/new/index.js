@@ -11,7 +11,12 @@ const fs = require('fs')
 const path = require('path')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
-const { BUNDLERS, GENERAL_QUESTIONS, WEBPACK_QUESTIONS } = require('./questions')
+const {
+  BUNDLERS,
+  GENERAL_QUESTIONS,
+  WEBPACK_QUESTIONS,
+  VITE_QUESTIONS
+} = require('./questions')
 const { installDependencies } = require('./dependencies')
 const { getStylesImport, getStylesExt, getStyleContent, getStylesConfig } = require('./stylesConfig')
 const { replaceOptionalPlugins } = require('./webpackContent')
@@ -32,6 +37,14 @@ async function create (projectName) {
     generalAnswers = {
       ...generalAnswers,
       ...webpackAnswers
+    }
+  }
+
+  if (generalAnswers.bundler === BUNDLERS.Vite) {
+    const viteAnswers = await inquirer.prompt(VITE_QUESTIONS)
+    generalAnswers = {
+      ...generalAnswers,
+      ...viteAnswers
     }
   }
 
@@ -88,6 +101,15 @@ function createExtraFiles (projectName, answers) {
     const contents = fs.readFileSync(path.join(__dirname, `/../../templates/others/${filename}`), 'utf-8')
     fs.writeFileSync(writePath, contents, 'utf-8')
   }
+
+  if (answers.bundler === BUNDLERS.Webpack) {
+    const originalFilename = 'webpack.config.js.template'
+    const writePath = `${CURRENT_DIR}/${projectName}/${originalFilename.replace('.template', '')}`
+    const contents = fs.readFileSync(path.join(__dirname, `/../../templates/others/${originalFilename}`), 'utf-8')
+    const { contents: replacedContents } = replaceContents(originalFilename, contents, projectName, answers)
+
+    fs.writeFileSync(writePath, replacedContents, 'utf-8')
+  }
 }
 
 /**
@@ -106,6 +128,24 @@ function replaceContents (file, contents, projectName, { language, plugins, styl
     const hasMiniCssExtractPlugin = plugins.includes('MiniCSSExtractPlugin')
     contents = contents.replace(/STYLES_RULE/, getStylesConfig(stylesheet, hasMiniCssExtractPlugin))
     contents = replaceOptionalPlugins(contents, { stylesheet, plugins })
+
+    if (language === 'JavaScript') {
+      contents = contents.replace(/LANGUAGE_RULE/, `
+        {
+          test: /\\.(js|jsx)$/,
+          use: 'babel-loader',
+          exclude: /node_modules/
+        },
+      `)
+    } else {
+      contents = contents.replace(/LANGUAGE_RULE/, `
+        {
+          test: /\\.ts(x)?$/,
+          loader: 'ts-loader',
+          exclude: /node_modules/
+        },
+      `)
+    }
   }
 
   if (file.includes('styles.template')) {
