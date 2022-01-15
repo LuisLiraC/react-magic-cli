@@ -6,7 +6,7 @@ COPY_WEBPACK_PLUGIN_IMPORT
 CLEAN_WEBPACK_PLUGIN_IMPORT
 
 const config = {
-  entry: './src/index.js',
+  entry: ENTRY_POINT,
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js'

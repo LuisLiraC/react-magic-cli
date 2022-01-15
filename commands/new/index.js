@@ -137,6 +137,8 @@ function replaceContents (file, contents, projectName, { language, plugins, styl
           exclude: /node_modules/
         },
       `)
+
+      contents = contents.replace(/ENTRY_POINT/, '\'./src/index.jsx\'')
     } else {
       contents = contents.replace(/LANGUAGE_RULE/, `
         {
@@ -145,6 +147,8 @@ function replaceContents (file, contents, projectName, { language, plugins, styl
           exclude: /node_modules/
         },
       `)
+
+      contents = contents.replace(/ENTRY_POINT/, '\'./src/index.tsx\'')
     }
   }
 
