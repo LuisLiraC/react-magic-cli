@@ -2,7 +2,7 @@ const { getPluginsNames } = require('./webpackContent')
 
 const BUNDLERS = {
   Webpack: 'Webpack',
-  Snowpack: 'Snowpack'
+  Vite: 'Vite'
 }
 
 const GENERAL_QUESTIONS = [
@@ -16,7 +16,7 @@ const GENERAL_QUESTIONS = [
     name: 'bundler',
     type: 'list',
     message: 'Select bundler',
-    choices: [BUNDLERS.Webpack]
+    choices: [BUNDLERS.Webpack, BUNDLERS.Vite]
   },
   {
     name: 'routing',
@@ -47,8 +47,11 @@ const WEBPACK_QUESTIONS = [
   }
 ]
 
+const VITE_QUESTIONS = []
+
 module.exports = {
   BUNDLERS,
   GENERAL_QUESTIONS,
-  WEBPACK_QUESTIONS
+  WEBPACK_QUESTIONS,
+  VITE_QUESTIONS
 }

@@ -6,18 +6,14 @@ COPY_WEBPACK_PLUGIN_IMPORT
 CLEAN_WEBPACK_PLUGIN_IMPORT
 
 const config = {
-  entry: './src/index.js',
+  entry: ENTRY_POINT,
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[contenthash].js'
   },
   module: {
     rules: [
-      {
-        test: /\.(js|jsx)$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
-      },
+      LANGUAGE_RULE
       {
         test: /\.svg$/,
         use: 'file-loader'
@@ -38,7 +34,7 @@ const config = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   devServer: {
     static: {
