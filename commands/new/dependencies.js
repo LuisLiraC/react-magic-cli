@@ -18,6 +18,7 @@ const DEPENDENCIES = {
 }
 
 const DEV_DEPENDENCIES = {
+  vite: ['@vitejs/plugin-react', 'vite'],
   webpack: ['webpack', 'webpack-cli', 'webpack-dev-server', 'file-loader', 'url-loader'],
   webpackPlugins: getPluginsDependencies(),
   styles: {
@@ -47,10 +48,16 @@ const DEV_DEPENDENCIES = {
  */
 function getDependencies ({ routing, language, bundler, plugins, stylesheet }) {
   const dependencies = [...DEPENDENCIES.react]
-  const devDependencies = [
-    ...DEV_DEPENDENCIES.babel,
-    ...DEV_DEPENDENCIES.styles.base
-  ]
+  const devDependencies = []
+
+  if (bundler === bundler.Webpack) {
+    devDependencies.push(...DEV_DEPENDENCIES.babel)
+    devDependencies.push(...DEV_DEPENDENCIES.styles.base)
+  }
+
+  if (bundler === bundler.Vite) {
+    devDependencies.push(...DEV_DEPENDENCIES.vite)
+  }
 
   if (language === 'TypeScript') {
     devDependencies.push(...DEV_DEPENDENCIES.typescript)
@@ -68,6 +75,10 @@ function getDependencies ({ routing, language, bundler, plugins, stylesheet }) {
     for (const plugin of plugins) {
       devDependencies.push(DEV_DEPENDENCIES.webpackPlugins[plugin])
     }
+  }
+
+  if (bundler === BUNDLERS.Vite) {
+    devDependencies.push(...DEV_DEPENDENCIES.vite)
   }
 
   if (stylesheet !== 'CSS') {

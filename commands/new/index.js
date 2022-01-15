@@ -110,6 +110,15 @@ function createExtraFiles (projectName, answers) {
 
     fs.writeFileSync(writePath, replacedContents, 'utf-8')
   }
+
+  if (answers.bundler === BUNDLERS.Vite) {
+    const originalFilename = 'vite.config.js.template'
+    const writePath = `${CURRENT_DIR}/${projectName}/${originalFilename.replace('.template', '')}`
+    const contents = fs.readFileSync(path.join(__dirname, `/../../templates/others/${originalFilename}`), 'utf-8')
+    const { contents: replacedContents } = replaceContents(originalFilename, contents, projectName, answers)
+
+    fs.writeFileSync(writePath, replacedContents, 'utf-8')
+  }
 }
 
 /**
@@ -119,9 +128,35 @@ function createExtraFiles (projectName, answers) {
  * @param {Answers} answers
  */
 
-function replaceContents (file, contents, projectName, { language, plugins, stylesheet, routing }) {
+function replaceContents (file, contents, projectName, { language, plugins, stylesheet, routing, bundler }) {
   if (file.includes('package.json')) {
     contents = contents.replace(/PROJECT_NAME/, projectName)
+
+    if (bundler === BUNDLERS.Webpack) {
+      contents = contents.replace(/SCRIPTS_PLACEHOLDER/, `
+        "start": "webpack serve --hot --mode development",
+        "build:dev": "webpack --mode development",
+        "build:prod": "webpack --mode production"
+      `)
+    }
+
+    if (bundler === BUNDLERS.Vite) {
+      contents = contents.replace(/SCRIPTS_PLACEHOLDER/, `
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+      `)
+    }
+  }
+
+  if (file.includes('index.html')) {
+    if (bundler === BUNDLERS.Webpack) {
+      contents = contents.replace(/VITE_IMPORT_ENTRY/, '')
+    }
+
+    if (bundler === BUNDLERS.Vite) {
+      contents = contents.replace(/VITE_IMPORT_ENTRY/, '<script type="module" src="./index.jsx"></script>')
+    }
   }
 
   if (file.includes('webpack.config.js')) {

@@ -50,7 +50,7 @@ export function About() {
     },
     index: {
       noRouting: `
-import { StrictMode } from 'react'
+import React, { StrictMode } from 'react'
 import { render } from 'react-dom'
 import App from './components/App'
 STYLES_IMPORT
@@ -62,7 +62,7 @@ render(
   document.getElementById('root')
 )`,
       withRouting: `
-import { StrictMode } from 'react'
+import React, { StrictMode } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ReactDOM from 'react-dom'
 STYLES_IMPORT
@@ -142,7 +142,7 @@ export function About() {
     },
     index: {
       noRouting: `
-import { StrictMode } from 'react'
+import React, { StrictMode } from 'react'
 import { render } from 'react-dom'
 import App from './components/App'
 STYLES_IMPORT
@@ -154,7 +154,7 @@ render(
   document.getElementById('root')
 )`,
       withRouting: `
-import { StrictMode } from 'react'
+import React, { StrictMode } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ReactDOM from 'react-dom'
 STYLES_IMPORT
