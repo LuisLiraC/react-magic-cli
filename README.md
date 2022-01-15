@@ -16,6 +16,13 @@ rg new MyProject
 rg component MyComponent
 ```
 
+## Alternative command
+if you have ripgrep installed you can use these alternatives
+```bash
+rcg <command> <resource-name>
+react-magic <command> <resource-name>
+```
+
 Current commands
 ```txt
 new                     Creates a project based on your answers

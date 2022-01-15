@@ -31,12 +31,7 @@ const DEV_DEPENDENCIES = {
       Stylus: ['stylus', 'stylus-loader']
     }
   },
-  babel: [
-    'babel-loader',
-    '@babel/core',
-    '@babel/preset-env',
-    '@babel/preset-react'
-  ],
+  babel: ['babel-loader', '@babel/core', '@babel/preset-env', '@babel/preset-react'],
   typescript: ['typescript', 'ts-loader'],
   types: {
     react: ['@types/react', '@types/react-dom']
@@ -107,13 +102,10 @@ function installDependencies (projectName, answers) {
   console.log(`npm i ${devDependencies} -D\n`)
   const install = exec(`cd ${projectName} && npm i ${dependencies} && npm i ${devDependencies} -D`)
 
-  install.stdout.on('data', (data) => {
-    if (data.includes('added')) {
-      console.log(data)
-    }
-  })
+  // send output from child process to main process
+  install.stdout.pipe(process.stdout)
 
-  install.stderr.on('data', (data) => {
+  install.stderr.on('data', data => {
     console.log('An error has ocurred while dependencies install. Try to install manually in your project folder.\n')
     console.log(`cd ${projectName}\n`)
     console.log(`npm i ${dependencies}\n`)
