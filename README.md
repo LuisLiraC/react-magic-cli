@@ -9,18 +9,12 @@ npm i -g react-magic-cli
 
 ## Usage
 ```bash
-rg <command> <resource-name>
-
-rg new MyProject
-
-rg component MyComponent
-```
-
-## Alternative command
-if you have ripgrep installed you can use these alternatives
-```bash
-rcg <command> <resource-name>
+rgc <command> <resource-name>
 react-magic <command> <resource-name>
+
+rgc new MyProject
+
+react-magic component MyComponent
 ```
 
 Current commands
@@ -34,6 +28,7 @@ Project generation
 ```bash
 rg new MyProject
 ```
+// TODO Update GIFs
 ![](https://imgur.com/AjwMqOD.gif)
 Simple component generation
 ```bash

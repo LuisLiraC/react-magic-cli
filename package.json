@@ -21,7 +21,6 @@
   ],
   "homepage": "https://github.com/LuisLiraC/react-magic-cli",
   "bin": {
-    "rg": "./index.js",
     "rgc": "./index.js",
     "react-magic": "./index.js"
   },
