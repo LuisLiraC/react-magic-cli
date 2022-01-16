@@ -109,6 +109,11 @@ function createExtraFiles (projectName, answers) {
     const { contents: replacedContents } = replaceContents(originalFilename, contents, projectName, answers)
 
     fs.writeFileSync(writePath, replacedContents, 'utf-8')
+
+    const babelFile = '.babelrc'
+    const writePathBabel = `${CURRENT_DIR}/${projectName}/${babelFile}`
+    const babelContents = fs.readFileSync(path.join(__dirname, `/../../templates/others/${babelFile}`), 'utf-8')
+    fs.writeFileSync(writePathBabel, babelContents, 'utf-8')
   }
 
   if (answers.bundler === BUNDLERS.Vite) {
@@ -142,8 +147,8 @@ function replaceContents (file, contents, projectName, { language, plugins, styl
 
     if (bundler === BUNDLERS.Vite) {
       contents = contents.replace(/SCRIPTS_PLACEHOLDER/, `
-        "dev": "vite",
-        "build": "vite build",
+        "start": "vite",
+        "build": "${language === 'JavaScript' ? 'vite build' : 'tsc && vite build'}",
         "preview": "vite preview"
       `)
     }
@@ -155,7 +160,9 @@ function replaceContents (file, contents, projectName, { language, plugins, styl
     }
 
     if (bundler === BUNDLERS.Vite) {
-      contents = contents.replace(/VITE_IMPORT_ENTRY/, '<script type="module" src="./index.jsx"></script>')
+      contents = contents.replace(/VITE_IMPORT_ENTRY/, `
+        <script type="module" src="./index.${language === 'JavaScript' ? 'jsx' : 'tsx'}"></script>`
+      )
     }
   }
 
