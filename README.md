@@ -26,12 +26,11 @@ component               Creates a component in ./src/components
 ## Examples
 Project generation
 ```bash
-rg new MyProject
+rgc new MyProject
 ```
-// TODO Update GIFs
-![](https://imgur.com/AjwMqOD.gif)
+![](https://imgur.com/oKUolA5.gif)
 Simple component generation
 ```bash
-rg component MyComponent
+rgc component MyComponent
 ```
-![](https://imgur.com/BS5PmI4.gif)
+![](https://imgur.com/mXVjJOY.gif)
