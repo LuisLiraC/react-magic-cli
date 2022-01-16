@@ -1,5 +1,6 @@
 /**
  * @typedef {Object} Answers
+ * @property {string} packageManager
  * @property {string} language
  * @property {string} bundler
  * @property {boolean} routing
@@ -93,28 +94,29 @@ function getDependencies ({ routing, language, bundler, plugins, stylesheet }) {
 function installDependencies (projectName, answers) {
   const { dependencies, devDependencies } = getDependencies(answers)
 
+  const packageManagerCommand = answers.packageManager === 'npm' ? 'npm i' : 'yarn add'
+
   console.log(chalk.grey('Installing dependencies'))
 
   console.log(chalk.grey('Running...'))
-  console.log(`npm i ${dependencies}\n`)
+  console.log(`${packageManagerCommand} ${dependencies}\n`)
 
   console.log(chalk.grey('Running...'))
-  console.log(`npm i ${devDependencies} -D\n`)
-  const install = exec(`cd ${projectName} && npm i ${dependencies} && npm i ${devDependencies} -D`)
+  console.log(`${packageManagerCommand} ${devDependencies} -D\n`)
+  const install = exec(`cd ${projectName} && ${packageManagerCommand} ${dependencies} && ${packageManagerCommand} ${devDependencies} -D`)
 
-  // send output from child process to main process
   install.stdout.pipe(process.stdout)
 
   install.stderr.on('data', data => {
     console.log('An error has ocurred while dependencies install. Try to install manually in your project folder.\n')
     console.log(`cd ${projectName}\n`)
-    console.log(`npm i ${dependencies}\n`)
-    console.log(`npm i ${devDependencies} -D\n`)
+    console.log(`${packageManagerCommand} ${dependencies}\n`)
+    console.log(`${packageManagerCommand} ${devDependencies} -D\n`)
     console.log(data)
   })
 
   install.on('exit', () => {
-    console.log(chalk.cyan(`Run your project\n  cd ${projectName}\n  npm start`))
+    console.log(chalk.cyan(`Run your project\n  cd ${projectName}\n  ${answers.packageManager} start`))
     console.log(chalk.cyan('\nHappy coding :)'))
   })
 }

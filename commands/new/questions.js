@@ -7,6 +7,12 @@ const BUNDLERS = {
 
 const GENERAL_QUESTIONS = [
   {
+    name: 'packageManager',
+    type: 'list',
+    message: 'Select Package Manager',
+    choices: ['npm', 'yarn']
+  },
+  {
     name: 'language',
     type: 'list',
     message: 'Select language',

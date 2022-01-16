@@ -1,5 +1,6 @@
 /**
  * @typedef {Object} Answers
+ * @property {string} packageManager
  * @property {string} language
  * @property {string} bundler
  * @property {boolean} routing
