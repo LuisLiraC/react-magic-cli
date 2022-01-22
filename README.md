@@ -21,7 +21,8 @@ Current commands
 ```txt
 new                     Creates a project based on your answers
 component               Creates a component in ./src/components
-hook                    Creates a custo hook in ./src/hooks
+hook                    Creates a custom hook in ./src/hooks
+hoc                     Creates a Higher-Order Component in ./src/hoc
 ```
 
 ## Examples

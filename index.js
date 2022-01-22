@@ -36,7 +36,8 @@ function reactMagicCliGuide () {
     Current commands:
       new            Creates a project based on your answers
       component      Creates a component in ./src/components
-      hook           Creates a custo, hook in ./src/hooks
+      hook           Creates a custom, hook in ./src/hooks
+      hoc            Create a Higher-Order Component in ./src/hoc
   `
   console.info(reactMagicCliGuideString)
   process.exit()
