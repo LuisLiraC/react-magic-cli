@@ -6,6 +6,8 @@ const { listOptions, getOptions } = require('./commands/options')
 
 const [, , ...userArguments] = process.argv
 
+if (userArguments.includes('--help')) reactMagicCliGuide()
+
 if (userArguments.length < 1) exitTerminal('Enter an option argument')
 else if (userArguments.length < 2) exitTerminal('Enter a valid name')
 
@@ -22,5 +24,19 @@ if (options.includes(option)) {
 
 function exitTerminal (message) {
   console.error(chalk.red(message))
+  process.exit()
+}
+
+function reactMagicCliGuide () {
+  const reactMagicCliGuideString = `
+    ✨ React Magic CLI - Guide
+
+    usage: rgc <command> <resource-name>
+
+    Current commands:
+      new            Creates a project based on your answers
+      component      Creates a component in ./src/components
+  `
+  console.info(reactMagicCliGuideString)
   process.exit()
 }
